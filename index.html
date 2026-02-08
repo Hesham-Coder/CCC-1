@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en" dir="ltr" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comprehensive Cancer Center - Science That Heals. Care That Connects.</title>
+    <script>
+        (function(){ var lang = localStorage.getItem('lang') || 'en'; var d = document.documentElement; d.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr'); d.setAttribute('lang', lang === 'ar' ? 'ar' : 'en'); d.classList.add('lang-' + lang); })();
+    </script>
     
     <!-- External Resources -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     
     <!-- Custom Styles -->
@@ -300,6 +304,10 @@
         .delay-400 { animation-delay: 0.4s; }
         .delay-500 { animation-delay: 0.5s; }
         .delay-600 { animation-delay: 0.6s; }
+
+        /* i18n: RTL uses Tajawal; LTR uses Manrope */
+        html.lang-ar, html.lang-ar body { font-family: 'Tajawal', sans-serif; }
+        html.lang-en, html.lang-en body { font-family: 'Manrope', sans-serif; }
     </style>
 
     <!-- Tailwind Configuration -->
@@ -341,6 +349,7 @@
                 <div class="size-6 sm:size-8">
                     <img 
                         src="./414697800_774275074717234_35332350398295507_n.jpg" 
+                        data-content-src="siteInfo.logoUrl"
                         alt="Comprehensive Cancer Center Logo"
                         class="w-full h-full object-contain"
                         style="border-radius: 15px; transform: scale(1.6);"
@@ -363,6 +372,11 @@
 
             <!-- Contact & CTA -->
             <div class="flex items-center gap-2 sm:gap-4 lg:gap-6">
+                <!-- Language Toggle -->
+                <div class="flex items-center rounded-lg border border-slate-200 bg-white/80 overflow-hidden" role="group" aria-label="Language">
+                    <button type="button" id="langEn" class="lang-toggle px-3 py-1.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors" data-lang="en">EN</button>
+                    <button type="button" id="langAr" class="lang-toggle px-3 py-1.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors" data-lang="ar">العربية</button>
+                </div>
                 <a 
                     href="tel:+201120800011" 
                     class="hidden xl:flex items-center gap-2 text-sm font-bold text-brand-blue-dark hover:text-brand-blue-light transition-colors"
@@ -406,6 +420,11 @@
             <a href="#resources" onclick="toggleMobileMenu()" class="text-base sm:text-lg font-semibold text-slate-700 hover:text-brand-blue-light transition-colors py-2">Resources</a>
             <a href="#contact" onclick="toggleMobileMenu()" class="text-base sm:text-lg font-semibold text-slate-700 hover:text-brand-blue-light transition-colors py-2">Contact</a>
             
+            <!-- Mobile Language Toggle -->
+            <div class="flex gap-2 mt-2">
+                <button type="button" class="lang-toggle flex-1 py-2 rounded-lg border text-sm font-semibold text-slate-600" data-lang="en">English</button>
+                <button type="button" class="lang-toggle flex-1 py-2 rounded-lg border text-sm font-semibold text-slate-600" data-lang="ar">العربية</button>
+            </div>
             <!-- Mobile CTA Button -->
             <button 
                 onclick="scrollToSection('contact'); toggleMobileMenu();"
@@ -440,7 +459,7 @@
     <main>
         
         <!-- Hero Section -->
-        <section id="home" class="relative min-h-[70vh] sm:min-h-[85vh] flex items-center pt-6 sm:pt-10 pb-12 sm:pb-20 overflow-hidden hero-gradient">
+        <section id="home" data-section-id="hero" class="relative min-h-[70vh] sm:min-h-[85vh] flex items-center pt-6 sm:pt-10 pb-12 sm:pb-20 overflow-hidden hero-gradient">
             
             <!-- Animated Background Particles -->
             <div class="absolute inset-0 overflow-hidden pointer-events-none">
@@ -479,12 +498,11 @@
 
                     <div class="space-y-4 sm:space-y-6 animate-slide-in-left delay-200">
                         <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 leading-[1.1] tracking-tight">
-                            Science That Heals. <br>
-                            <span class="text-brand-blue-light bg-clip-text animate-gradient" style="background-image: linear-gradient(90deg, #0096D6, #004A8D, #0096D6);">Care That Connects.</span>
+                            <span data-content="siteInfo.heroHeading">Science That Heals.</span> <br>
+                            <span class="text-brand-blue-light bg-clip-text animate-gradient" style="background-image: linear-gradient(90deg, #0096D6, #004A8D, #0096D6);" data-content="siteInfo.heroSubheading">Care That Connects.</span>
                         </h1>
-                        <p class="text-base sm:text-lg lg:text-xl text-slate-600 max-w-xl mx-auto lg:mx-0 font-medium px-4 sm:px-0">
-                            Advanced personalized oncology treatment paths powered by AI and human compassion. 
-                            Your journey to recovery is guided by world-class innovation.
+                        <p class="text-base sm:text-lg lg:text-xl text-slate-600 max-w-xl mx-auto lg:mx-0 font-medium px-4 sm:px-0" data-content="siteInfo.heroDescription">
+                            Advanced personalized oncology treatment paths powered by AI and human compassion. Your journey to recovery is guided by world-class innovation.
                         </p>
                     </div>
 
@@ -492,29 +510,27 @@
                         <button 
                             onclick="scrollToSection('contact')"
                             class="w-full sm:w-auto bg-gradient-to-r from-brand-red-cta to-red-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-base sm:text-lg font-bold shadow-xl shadow-red-100 hover:shadow-red-200 transition-all hover:-translate-y-1 hover:scale-105"
-                        >
-                            Start Your Journey
-                        </button>
+                            data-content="siteInfo.heroCtaPrimary"
+                        >Start Your Journey</button>
                         <button 
                             onclick="scrollToSection('services')"
                             class="w-full sm:w-auto border-2 border-slate-200 text-slate-700 hover:bg-slate-50 px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-base sm:text-lg font-bold transition-all hover:scale-105"
-                        >
-                            Explore Services
-                        </button>
+                            data-content="siteInfo.heroCtaSecondary"
+                        >Explore Services</button>
                     </div>
 
                     <!-- Stats -->
                     <div class="grid grid-cols-3 gap-4 sm:gap-6 pt-6 sm:pt-8 border-t border-slate-200 animate-slide-in-up delay-600">
                         <div class="text-center lg:text-left perspective-container">
-                            <p class="text-2xl sm:text-3xl font-black text-brand-blue-dark animate-pulse-3d">98%</p>
+                            <p class="text-2xl sm:text-3xl font-black text-brand-blue-dark animate-pulse-3d" data-content="stats.successRate" data-suffix="%">98%</p>
                             <p class="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider">Success Rate</p>
                         </div>
                         <div class="text-center lg:text-left perspective-container">
-                            <p class="text-2xl sm:text-3xl font-black text-brand-blue-dark animate-pulse-3d delay-200">25k+</p>
+                            <p class="text-2xl sm:text-3xl font-black text-brand-blue-dark animate-pulse-3d delay-200" data-content="stats.patientsServed" data-suffix="+">25k+</p>
                             <p class="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider">Patients Helped</p>
                         </div>
                         <div class="text-center lg:text-left perspective-container">
-                            <p class="text-2xl sm:text-3xl font-black text-brand-blue-dark animate-pulse-3d delay-400">50+</p>
+                            <p class="text-2xl sm:text-3xl font-black text-brand-blue-dark animate-pulse-3d delay-400" data-content="stats.specialists" data-suffix="+">50+</p>
                             <p class="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider">Expert Doctors</p>
                         </div>
                     </div>
@@ -525,6 +541,7 @@
                     <div class="relative z-10 animate-float">
                         <img 
                             src="./485279495_1084203800391025_2931703889426917655_n.jpg" 
+                            data-content-src="siteInfo.heroImageUrl"
                             alt="Medical Team"
                             class="rounded-3xl shadow-2xl border-8 border-white card-3d"
                         >
@@ -544,7 +561,7 @@
         </section>
 
         <!-- Services Section -->
-        <section id="services" class="py-16 sm:py-24 lg:py-32 bg-white relative overflow-hidden">
+        <section id="services" data-section-id="services" class="py-16 sm:py-24 lg:py-32 bg-white relative overflow-hidden">
             
             <!-- Animated background gradient orbs -->
             <div class="absolute top-20 left-10 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-bounce-3d"></div>
@@ -555,12 +572,8 @@
                     <div class="inline-flex items-center gap-2 glass px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-brand-blue-dark font-bold text-[10px] sm:text-xs uppercase tracking-widest mb-4 sm:mb-6 animate-fade-in">
                         Our Services
                     </div>
-                    <h2 class="text-3xl sm:text-4xl lg:text-6xl font-black text-slate-900 mb-4 sm:mb-6 px-4 sm:px-0 animate-slide-in-up">
-                        Comprehensive Cancer Care
-                    </h2>
-                    <p class="text-base sm:text-lg lg:text-xl text-slate-600 px-4 sm:px-0 animate-slide-in-up delay-200">
-                        From diagnosis to recovery, we provide complete support every step of the way.
-                    </p>
+                    <h2 class="text-3xl sm:text-4xl lg:text-6xl font-black text-slate-900 mb-4 sm:mb-6 px-4 sm:px-0 animate-slide-in-up" data-content="servicesSection.heading">Comprehensive Cancer Care</h2>
+                    <p class="text-base sm:text-lg lg:text-xl text-slate-600 px-4 sm:px-0 animate-slide-in-up delay-200" data-content="servicesSection.subheading">From diagnosis to recovery, we provide complete support every step of the way.</p>
                 </div>
 
                 <!-- Service Cards Grid -->
@@ -654,7 +667,7 @@
         </section>
 
         <!-- Team Section -->
-        <section id="team" class="py-16 sm:py-24 lg:py-32 bg-slate-50 relative overflow-hidden">
+        <section id="team" data-section-id="team" class="py-16 sm:py-24 lg:py-32 bg-slate-50 relative overflow-hidden">
             
             <!-- 3D Medical Cross -->
             <div class="absolute bottom-10 left-10 opacity-5 animate-spin-3d hidden lg:block">
@@ -669,98 +682,26 @@
                     <div class="inline-flex items-center gap-2 glass px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-brand-blue-dark font-bold text-[10px] sm:text-xs uppercase tracking-widest mb-4 sm:mb-6 animate-fade-in">
                         Our Experts
                     </div>
-                    <h2 class="text-3xl sm:text-4xl lg:text-6xl font-black text-slate-900 mb-4 sm:mb-6 px-4 sm:px-0 animate-slide-in-up">
-                        World-Class Specialists
-                    </h2>
-                    <p class="text-base sm:text-lg lg:text-xl text-slate-600 px-4 sm:px-0 animate-slide-in-up delay-200">
-                        Our team combines decades of experience with cutting-edge research and compassionate care.
-                    </p>
+                    <h2 class="text-3xl sm:text-4xl lg:text-6xl font-black text-slate-900 mb-4 sm:mb-6 px-4 sm:px-0 animate-slide-in-up" data-content="teamSection.heading">World-Class Specialists</h2>
+                    <p class="text-base sm:text-lg lg:text-xl text-slate-600 px-4 sm:px-0 animate-slide-in-up delay-200" data-content="teamSection.subheading">Our team combines decades of experience with cutting-edge research and compassionate care.</p>
                 </div>
 
-                <!-- Team Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 perspective-container">
-                    
-                    <!-- Team Member 1 -->
-                    <div class="bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 card-3d animate-scale-in delay-100 group">
-                        <div class="h-48 sm:h-56 lg:h-64 bg-gradient-to-br from-blue-100 to-blue-50 relative overflow-hidden">
-                            <div class="absolute inset-0 bg-gradient-to-br from-brand-blue-light to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
-                            <!-- Animated pulse circle -->
-                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white rounded-full opacity-10 animate-pulse-3d"></div>
-                        </div>
-                        <div class="p-4 sm:p-6 relative">
-                            <div class="absolute -top-8 right-4 w-12 h-12 bg-brand-blue-light rounded-full flex items-center justify-center shadow-lg animate-bounce-3d">
-                                <span class="material-symbols-outlined text-white text-xl">medical_services</span>
-                            </div>
-                            <h4 class="text-lg sm:text-xl font-bold text-slate-900 mb-1">Dr. Sarah Chen</h4>
-                            <p class="text-xs sm:text-sm text-brand-blue-light font-bold mb-2 sm:mb-3">Chief Oncologist</p>
-                            <p class="text-xs sm:text-sm text-slate-600">25+ years specializing in precision oncology and immunotherapy.</p>
-                        </div>
-                    </div>
-
-                    <!-- Team Member 2 -->
-                    <div class="bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 card-3d animate-scale-in delay-200 group">
-                        <div class="h-48 sm:h-56 lg:h-64 bg-gradient-to-br from-red-100 to-red-50 relative overflow-hidden">
-                            <div class="absolute inset-0 bg-gradient-to-br from-brand-red-cta to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
-                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white rounded-full opacity-10 animate-pulse-3d delay-200"></div>
-                        </div>
-                        <div class="p-4 sm:p-6 relative">
-                            <div class="absolute -top-8 right-4 w-12 h-12 bg-brand-red-cta rounded-full flex items-center justify-center shadow-lg animate-bounce-3d delay-200">
-                                <span class="material-symbols-outlined text-white text-xl">radiology</span>
-                            </div>
-                            <h4 class="text-lg sm:text-xl font-bold text-slate-900 mb-1">Dr. Michael Torres</h4>
-                            <p class="text-xs sm:text-sm text-brand-blue-light font-bold mb-2 sm:mb-3">Radiation Specialist</p>
-                            <p class="text-xs sm:text-sm text-slate-600">Expert in advanced radiation therapy and treatment planning.</p>
-                        </div>
-                    </div>
-
-                    <!-- Team Member 3 -->
-                    <div class="bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 card-3d animate-scale-in delay-300 group">
-                        <div class="h-48 sm:h-56 lg:h-64 bg-gradient-to-br from-green-100 to-green-50 relative overflow-hidden">
-                            <div class="absolute inset-0 bg-gradient-to-br from-green-600 to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
-                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white rounded-full opacity-10 animate-pulse-3d delay-400"></div>
-                        </div>
-                        <div class="p-4 sm:p-6 relative">
-                            <div class="absolute -top-8 right-4 w-12 h-12 bg-green-600 rounded-full flex items-center justify-center shadow-lg animate-bounce-3d delay-400">
-                                <span class="material-symbols-outlined text-white text-xl">genetics</span>
-                            </div>
-                            <h4 class="text-lg sm:text-xl font-bold text-slate-900 mb-1">Dr. Priya Patel</h4>
-                            <p class="text-xs sm:text-sm text-brand-blue-light font-bold mb-2 sm:mb-3">Genetic Counselor</p>
-                            <p class="text-xs sm:text-sm text-slate-600">Leading researcher in cancer genetics and hereditary screening.</p>
-                        </div>
-                    </div>
-
-                    <!-- Team Member 4 -->
-                    <div class="bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 card-3d animate-scale-in delay-400 group">
-                        <div class="h-48 sm:h-56 lg:h-64 bg-gradient-to-br from-purple-100 to-purple-50 relative overflow-hidden">
-                            <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
-                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white rounded-full opacity-10 animate-pulse-3d delay-600"></div>
-                        </div>
-                        <div class="p-4 sm:p-6 relative">
-                            <div class="absolute -top-8 right-4 w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center shadow-lg animate-bounce-3d delay-600">
-                                <span class="material-symbols-outlined text-white text-xl">surgical</span>
-                            </div>
-                            <h4 class="text-lg sm:text-xl font-bold text-slate-900 mb-1">Dr. James Wilson</h4>
-                            <p class="text-xs sm:text-sm text-brand-blue-light font-bold mb-2 sm:mb-3">Surgical Oncologist</p>
-                            <p class="text-xs sm:text-sm text-slate-600">Pioneer in minimally invasive surgical techniques.</p>
-                        </div>
-                    </div>
+                <!-- Team Grid (filled dynamically from content.experts) -->
+                <div id="expertsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 perspective-container">
+                    <!-- Expert cards injected by JS -->
                 </div>
             </div>
         </section>
 
         <!-- Contact Section -->
-        <section id="contact" class="py-16 sm:py-24 lg:py-32 bg-white">
+        <section id="contact" data-section-id="contact" class="py-16 sm:py-24 lg:py-32 bg-white">
             <div class="mx-auto max-w-7xl px-4 sm:px-6">
                 <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16 lg:mb-20">
                     <div class="inline-flex items-center gap-2 glass px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-brand-blue-dark font-bold text-[10px] sm:text-xs uppercase tracking-widest mb-4 sm:mb-6">
                         Get In Touch
                     </div>
-                    <h2 class="text-3xl sm:text-4xl lg:text-6xl font-black text-slate-900 mb-4 sm:mb-6 px-4 sm:px-0">
-                        Start Your Healing Journey
-                    </h2>
-                    <p class="text-base sm:text-lg lg:text-xl text-slate-600 px-4 sm:px-0">
-                        Schedule a consultation with our team today. We're here to help.
-                    </p>
+                    <h2 class="text-3xl sm:text-4xl lg:text-6xl font-black text-slate-900 mb-4 sm:mb-6 px-4 sm:px-0" data-content="contactSection.heading">Start Your Healing Journey</h2>
+                    <p class="text-base sm:text-lg lg:text-xl text-slate-600 px-4 sm:px-0" data-content="contactSection.subheading">Schedule a consultation with our team today. We're here to help.</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
@@ -933,7 +874,7 @@
         </section>
 
         <!-- CTA Section -->
-        <section class="py-16 sm:py-24 lg:py-32 relative overflow-hidden bg-brand-blue-dark">
+        <section data-section-id="cta" class="py-16 sm:py-24 lg:py-32 relative overflow-hidden bg-brand-blue-dark">
             <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
             
             <!-- Multiple animated orbs -->
@@ -976,8 +917,8 @@
                 </div>
                 
                 <h2 class="text-3xl sm:text-4xl lg:text-6xl font-black text-white leading-tight px-4 sm:px-0 animate-slide-in-up">
-                    You're not alone. <br>
-                    <span class="inline-block animate-pulse-3d">We walk this journey with you.</span>
+                    <span data-content="ctaSection.heading">You're not alone.</span> <br>
+                    <span class="inline-block animate-pulse-3d" data-content="ctaSection.subheading">We walk this journey with you.</span>
                 </h2>
                 
                 <div class="flex justify-center px-4 sm:px-0 animate-scale-in delay-300">
@@ -985,6 +926,7 @@
                         onclick="scrollToSection('contact')"
                         class="group relative px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 bg-white text-brand-blue-dark rounded-xl sm:rounded-2xl font-black text-base sm:text-lg lg:text-xl overflow-hidden transition-all hover:scale-110 active:scale-95 shadow-2xl perspective-container"
                         style="transform-style: preserve-3d;"
+                        data-content="ctaSection.buttonLabel"
                     >
                         <span class="relative z-10">Book a Consultation</span>
                         <div class="absolute inset-0 bg-gradient-to-r from-blue-100 via-cyan-100 to-blue-100 translate-y-full group-hover:translate-y-0 transition-transform duration-300 animate-gradient"></div>
@@ -1106,7 +1048,7 @@
 
             <!-- Footer Bottom -->
             <div class="pt-6 sm:pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4 text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">
-                <p class="text-center md:text-left">© 2024 Comprehensive Cancer Center. All rights reserved.</p>
+                <p class="text-center md:text-left" data-content="footer.copyright">© 2024 Comprehensive Cancer Center. All rights reserved.</p>
                 <div class="flex gap-4 sm:gap-6">
                     <a href="#" class="hover:text-brand-blue-dark transition-all">Privacy</a>
                     <a href="#" class="hover:text-brand-blue-dark transition-all">Terms</a>
@@ -1358,6 +1300,137 @@
             if (statsSection) {
                 statsObserver.observe(statsSection);
             }
+        });
+    </script>
+
+    <!-- Dynamic content from dashboard + i18n (single source of truth: /api/public/content) -->
+    <script>
+        (function() {
+            var currentLang = localStorage.getItem('lang') || 'en';
+            var websiteContent = null;
+
+            function get(obj, path) {
+                var parts = path.split('.');
+                for (var i = 0; i < parts.length && obj != null; i++) {
+                    obj = obj[parts[i]];
+                }
+                return obj;
+            }
+            function getLocalized(val, lang) {
+                if (val == null) return '';
+                if (typeof val === 'object' && (val.en != null || val.ar != null))
+                    return (val[lang] != null && val[lang] !== '') ? String(val[lang]) : (val.en != null ? String(val.en) : String(val.ar || ''));
+                return String(val);
+            }
+            function applyContent(c, lang) {
+                lang = lang || currentLang;
+                if (!c) return;
+                document.querySelectorAll('[data-content]').forEach(function(el) {
+                    var val = get(c, el.getAttribute('data-content'));
+                    var text = getLocalized(val, lang);
+                    if (text == null) return;
+                    var suffix = el.getAttribute('data-suffix') || '';
+                    el.textContent = text + suffix;
+                });
+                document.querySelectorAll('[data-content-src]').forEach(function(el) {
+                    var url = get(c, el.getAttribute('data-content-src'));
+                    if (url && typeof url === 'string') el.src = url;
+                });
+                var titleObj = c.siteInfo && (c.siteInfo.title || c.siteInfo.tagline);
+                if (titleObj) {
+                    var t = getLocalized(c.siteInfo.title, lang);
+                    var tag = getLocalized(c.siteInfo.tagline, lang);
+                    document.title = tag ? t + ' - ' + tag : t;
+                }
+            }
+            function applySections(c) {
+                var main = document.querySelector('main');
+                if (!main || !c) return;
+                var order = c.sectionsOrder || [];
+                var vis = c.sectionVisibility || {};
+                var byId = {};
+                main.querySelectorAll('[data-section-id]').forEach(function(s) {
+                    byId[s.getAttribute('data-section-id')] = s;
+                });
+                var ordered = [];
+                order.forEach(function(id) {
+                    if (vis[id] === false) return;
+                    var el = byId[id];
+                    if (el) { el.style.display = ''; ordered.push(el); }
+                });
+                Object.keys(byId).forEach(function(id) {
+                    if (vis[id] === false) byId[id].style.display = 'none';
+                });
+                ordered.forEach(function(el) { main.appendChild(el); });
+            }
+            function setLanguage(lang) {
+                currentLang = lang;
+                localStorage.setItem('lang', lang);
+                var html = document.documentElement;
+                html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+                html.setAttribute('lang', lang === 'ar' ? 'ar' : 'en');
+                html.classList.remove('lang-en', 'lang-ar');
+                html.classList.add('lang-' + lang);
+                document.querySelectorAll('.lang-toggle').forEach(function(btn) {
+                    var isActive = btn.getAttribute('data-lang') === lang;
+                    btn.classList.toggle('bg-brand-blue-dark', isActive);
+                    btn.classList.toggle('text-white', isActive);
+                    btn.classList.toggle('border-brand-blue-dark', isActive);
+                });
+                if (websiteContent) applyContent(websiteContent, lang);
+            }
+            var EXPERT_GRADIENTS = ['from-blue-100 to-blue-50', 'from-red-100 to-red-50', 'from-green-100 to-green-50', 'from-purple-100 to-purple-50', 'from-orange-100 to-orange-50', 'from-cyan-100 to-cyan-50'];
+            var EXPERT_BADGES = ['bg-brand-blue-light', 'bg-brand-red-cta', 'bg-green-600', 'bg-purple-600', 'bg-orange-600', 'bg-cyan-600'];
+            var EXPERT_DELAYS = ['delay-100', 'delay-200', 'delay-300', 'delay-400', 'delay-500', 'delay-600'];
+            function escapeHtml(s) {
+                if (s == null) return '';
+                var t = String(s);
+                return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            }
+            function applyExperts(c) {
+                var grid = document.getElementById('expertsGrid');
+                if (!grid || !c.experts || !Array.isArray(c.experts)) return;
+                var list = c.experts.filter(function(ex) { return ex.visible !== false; });
+                grid.innerHTML = list.map(function(ex, i) {
+                    var grad = EXPERT_GRADIENTS[i % EXPERT_GRADIENTS.length];
+                    var badge = EXPERT_BADGES[i % EXPERT_BADGES.length];
+                    var delay = EXPERT_DELAYS[i % EXPERT_DELAYS.length];
+                    var name = escapeHtml(ex.name || '');
+                    var title = escapeHtml(ex.title || '');
+                    var bio = escapeHtml(ex.bio || '');
+                    var icon = ex.icon || 'medical_services';
+                    var imgBlock = ex.imageUrl
+                        ? '<img src="' + escapeHtml(ex.imageUrl) + '" alt="' + name + '" class="w-full h-full object-cover">'
+                        : '<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white rounded-full opacity-10 animate-pulse-3d' + (i > 0 ? ' ' + EXPERT_DELAYS[i % 6] : '') + '"></div>';
+                    return '<div class="bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 card-3d animate-scale-in ' + delay + ' group">' +
+                        '<div class="h-48 sm:h-56 lg:h-64 bg-gradient-to-br ' + grad + ' relative overflow-hidden">' +
+                        '<div class="absolute inset-0 bg-gradient-to-br from-brand-blue-light to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>' +
+                        imgBlock +
+                        '</div>' +
+                        '<div class="p-4 sm:p-6 relative">' +
+                        '<div class="absolute -top-8 right-4 w-12 h-12 ' + badge + ' rounded-full flex items-center justify-center shadow-lg animate-bounce-3d ' + delay + '">' +
+                        '<span class="material-symbols-outlined text-white text-xl">' + icon + '</span></div>' +
+                        '<h4 class="text-lg sm:text-xl font-bold text-slate-900 mb-1">' + name + '</h4>' +
+                        '<p class="text-xs sm:text-sm text-brand-blue-light font-bold mb-2 sm:mb-3">' + title + '</p>' +
+                        '<p class="text-xs sm:text-sm text-slate-600">' + bio + '</p>' +
+                        '</div></div>';
+                }).join('');
+            }
+            fetch('/api/public/content').then(function(r) { return r.json(); }).then(function(c) {
+                websiteContent = c;
+                applySections(c);
+                applyExperts(c);
+                setLanguage(currentLang);
+                document.querySelectorAll('.lang-toggle').forEach(function(btn) {
+                    btn.addEventListener('click', function() { setLanguage(btn.getAttribute('data-lang')); });
+                });
+            }).catch(function() {
+                setLanguage(currentLang);
+                document.querySelectorAll('.lang-toggle').forEach(function(btn) {
+                    btn.addEventListener('click', function() { setLanguage(btn.getAttribute('data-lang')); });
+                });
+            });
+        })();
     </script>
 
 </body>
