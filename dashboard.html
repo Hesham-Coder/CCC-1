@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .username {
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 20px;
+        }
+
+        .editor-container {
+            margin-bottom: 20px;
+        }
+
+        #contentEditor {
+            width: 100%;
+            min-height: 400px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            background: #f9f9f9;
+        }
+
+        #contentEditor:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .message.error {
+            background: #fee;
+            color: #c00;
+            border: 1px solid #fcc;
+        }
+
+        .message.success {
+            background: #efe;
+            color: #0a0;
+            border: 1px solid #cfc;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #1976d2;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>📊 Admin Dashboard</h1>
+            <div class="user-info">
+                <span class="username">👤 <span id="username">Loading...</span></span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>Content Editor</h2>
+            
+            <div class="info-box">
+                💡 Edit the JSON content below. Changes will be reflected on your public website immediately after saving.
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <div class="editor-container">
+                <textarea id="contentEditor" placeholder="Loading content..."></textarea>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="saveContent()" id="saveBtn">
+                    💾 Save Changes
+                </button>
+                <button class="btn btn-secondary" onclick="loadContent()" id="refreshBtn">
+                    🔄 Refresh
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Quick Links</h2>
+            <p style="margin-bottom: 10px;">
+                <a href="/" target="_blank" style="color: #667eea; text-decoration: none;">🌐 View Public Website</a>
+            </p>
+            <p>
+                <a href="/api/public/content" target="_blank" style="color: #667eea; text-decoration: none;">📡 View Public API</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let currentContent = null;
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type} show`;
+            
+            setTimeout(() => {
+                messageDiv.className = 'message';
+            }, 5000);
+        }
+
+        // Check authentication
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/check');
+                const data = await response.json();
+                
+                if (!data.authenticated) {
+                    window.location.href = '/login.html';
+                    return false;
+                }
+                
+                document.getElementById('username').textContent = data.username;
+                return true;
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                window.location.href = '/login.html';
+                return false;
+            }
+        }
+
+        // Load content
+        async function loadContent() {
+            const editor = document.getElementById('contentEditor');
+            const refreshBtn = document.getElementById('refreshBtn');
+            
+            refreshBtn.disabled = true;
+            refreshBtn.textContent = '⏳ Loading...';
+            
+            try {
+                const response = await fetch('/api/admin/content');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load content');
+                }
+                
+                currentContent = await response.json();
+                editor.value = JSON.stringify(currentContent, null, 2);
+                showMessage('Content loaded successfully', 'success');
+            } catch (error) {
+                console.error('Load error:', error);
+                showMessage('Failed to load content: ' + error.message, 'error');
+            } finally {
+                refreshBtn.disabled = false;
+                refreshBtn.textContent = '🔄 Refresh';
+            }
+        }
+
+        // Save content
+        async function saveContent() {
+            const editor = document.getElementById('contentEditor');
+            const saveBtn = document.getElementById('saveBtn');
+            
+            let content;
+            try {
+                content = JSON.parse(editor.value);
+            } catch (error) {
+                showMessage('Invalid JSON format. Please check your syntax.', 'error');
+                return;
+            }
+            
+            saveBtn.disabled = true;
+            saveBtn.textContent = '💾 Saving...';
+            
+            try {
+                const response = await fetch('/api/admin/content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(content),
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    currentContent = content;
+                    showMessage('✅ Content saved successfully!', 'success');
+                } else {
+                    showMessage('Failed to save: ' + (data.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                showMessage('Failed to save content: ' + error.message, 'error');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = '💾 Save Changes';
+            }
+        }
+
+        // Logout
+        async function logout() {
+            try {
+                await fetch('/logout', { method: 'POST' });
+                window.location.href = '/login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Initialize
+        (async () => {
+            const authenticated = await checkAuth();
+            if (authenticated) {
+                await loadContent();
+            }
+        })();
+
+        // Warn about unsaved changes
+        let originalContent = '';
+        document.getElementById('contentEditor').addEventListener('input', function() {
+            if (originalContent === '') {
+                originalContent = this.value;
+            }
+        });
+
+        window.addEventListener('beforeunload', function(e) {
+            const editor = document.getElementById('contentEditor');
+            if (editor.value !== originalContent && originalContent !== '') {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>

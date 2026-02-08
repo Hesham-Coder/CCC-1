@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Internal Referral</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#ec1313',
+                        'primary-light': '#f87171',
+                        'primary-dark': '#b91c1c',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        arabic: ['Tajawal', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+        }
+        html.lang-ar, html.lang-ar body { font-family: 'Tajawal', sans-serif; }
+        html.lang-en body { font-family: 'Inter', sans-serif; }
+        .sidebar-transition { transition: width 0.25s ease, padding 0.25s ease; }
+        .sidebar.collapsed .sidebar-link-text { display: none; }
+        .sidebar.collapsed #sidebarLogo { opacity: 0; pointer-events: none; width: 0; overflow: hidden; }
+        .sidebar:not(.collapsed) { width: 16rem; min-width: 16rem; }
+        .sidebar.collapsed { width: 5rem; min-width: 5rem; }
+        .drop-zone.dragover { border-color: #ec1313; background: rgba(236, 19, 19, 0.05); }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased">
+    <div class="flex min-h-screen">
+        <!-- Collapsible Sidebar: start (left in LTR, right in RTL) -->
+        <aside id="sidebar" class="sidebar sidebar-transition flex flex-col glass border-slate-200 border-e shrink-0">
+            <div class="p-4 border-b border-slate-200 flex items-center justify-between gap-2">
+                <span id="sidebarLogo" class="font-bold text-primary text-lg whitespace-nowrap truncate">Admin</span>
+                <button type="button" id="sidebarToggle" class="p-2 rounded-lg hover:bg-slate-200/80 text-slate-600 shrink-0" aria-label="Toggle sidebar">
+                    <svg id="sidebarChevron" class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+            </div>
+            <nav class="flex-1 p-3 space-y-1">
+                <a href="/dashboard.html" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-200/80 hover:text-slate-900">
+                    <span class="sidebar-link-text truncate" data-i18n="nav.dashboard">Dashboard</span>
+                </a>
+                <a href="/referral.html" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary font-medium">
+                    <span class="sidebar-link-text truncate" data-i18n="nav.referrals">Referrals</span>
+                </a>
+                <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-200/80 hover:text-slate-900">
+                    <span class="sidebar-link-text truncate" data-i18n="nav.patients">Patients</span>
+                </a>
+                <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-200/80 hover:text-slate-900">
+                    <span class="sidebar-link-text truncate" data-i18n="nav.settings">Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main content -->
+        <main class="flex-1 flex flex-col min-w-0">
+            <!-- Header with language toggle -->
+            <header class="glass border-b border-slate-200 px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+                <h1 class="text-xl font-bold text-slate-900 truncate" data-i18n="page.title">Create Internal Referral</h1>
+                <div class="flex items-center gap-2 shrink-0">
+                    <span class="text-sm text-slate-500 hidden sm:inline" data-i18n="lang.label">Language</span>
+                    <div class="flex rounded-lg border border-slate-200 bg-white overflow-hidden">
+                        <button type="button" id="langEn" class="lang-btn px-3 py-1.5 text-sm font-medium bg-primary text-white" data-lang="en">EN</button>
+                        <button type="button" id="langAr" class="lang-btn px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100" data-lang="ar">العربية</button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="flex-1 p-4 sm:p-6 overflow-auto">
+                <form id="referralForm" class="max-w-2xl mx-auto glass rounded-2xl p-6 sm:p-8 shadow-lg border border-white/50 space-y-6">
+                    <!-- Patient Name -->
+                    <div>
+                        <label for="patientName" class="block text-sm font-medium text-slate-700 mb-1" data-i18n="form.patientName">Patient Name</label>
+                        <input type="text" id="patientName" name="patientName" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition"
+                            placeholder="Full name">
+                    </div>
+                    <!-- Patient ID -->
+                    <div>
+                        <label for="patientId" class="block text-sm font-medium text-slate-700 mb-1" data-i18n="form.patientId">Patient ID</label>
+                        <input type="text" id="patientId" name="patientId"
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition"
+                            placeholder="ID number">
+                    </div>
+                    <!-- Referring Department -->
+                    <div>
+                        <label for="department" class="block text-sm font-medium text-slate-700 mb-1" data-i18n="form.department">Referring Department</label>
+                        <select id="department" name="department" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition bg-white">
+                            <option value="" data-i18n="department.placeholder">Select department</option>
+                            <option value="oncology" data-i18n="department.oncology">Oncology</option>
+                            <option value="cardiology" data-i18n="department.cardiology">Cardiology</option>
+                            <option value="surgery" data-i18n="department.surgery">Surgery</option>
+                            <option value="radiology" data-i18n="department.radiology">Radiology</option>
+                        </select>
+                    </div>
+                    <!-- Referral Type -->
+                    <div>
+                        <label for="referralType" class="block text-sm font-medium text-slate-700 mb-1" data-i18n="form.referralType">Referral Type</label>
+                        <select id="referralType" name="referralType" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition bg-white">
+                            <option value="" data-i18n="type.placeholder">Select type</option>
+                            <option value="urgent" data-i18n="type.urgent">Urgent</option>
+                            <option value="routine" data-i18n="type.routine">Routine</option>
+                            <option value="follow-up" data-i18n="type.follow-up">Follow-up</option>
+                        </select>
+                    </div>
+                    <!-- Clinical Reason -->
+                    <div>
+                        <label for="clinicalReason" class="block text-sm font-medium text-slate-700 mb-1" data-i18n="form.clinicalReason">Clinical Reason</label>
+                        <textarea id="clinicalReason" name="clinicalReason" rows="4" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition resize-y"
+                            placeholder="Describe the clinical reason for referral..."></textarea>
+                    </div>
+
+                    <!-- Upload Attachments -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2" data-i18n="form.attachments">Upload Attachments</label>
+                        <div id="dropZone" class="drop-zone border-2 border-dashed border-slate-300 rounded-xl p-8 text-center cursor-pointer transition-colors bg-slate-50/80 hover:bg-slate-100/80">
+                            <input type="file" id="fileInput" accept="image/*" multiple class="hidden">
+                            <p class="text-slate-500 text-sm mb-1" data-i18n="form.dragDrop">Drag & drop images here or click to upload</p>
+                            <p class="text-slate-400 text-xs" data-i18n="form.multiple">Multiple files supported</p>
+                        </div>
+                        <ul id="previewList" class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3 list-none p-0 m-0"></ul>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <button type="submit" class="px-6 py-2.5 rounded-xl bg-primary text-white font-medium hover:bg-primary-dark focus:ring-2 focus:ring-primary/30 outline-none transition" data-i18n="form.submit">
+                            Submit Request
+                        </button>
+                        <button type="button" id="btnCancel" class="px-6 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-medium hover:bg-slate-100 outline-none transition" data-i18n="form.cancel">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        (function() {
+            var lang = localStorage.getItem('referral-lang') || 'en';
+            var uploadedFiles = [];
+
+            var i18n = {
+                en: {
+                    'page.title': 'Create Internal Referral',
+                    'lang.label': 'Language',
+                    'nav.dashboard': 'Dashboard',
+                    'nav.referrals': 'Referrals',
+                    'nav.patients': 'Patients',
+                    'nav.settings': 'Settings',
+                    'form.patientName': 'Patient Name',
+                    'form.patientId': 'Patient ID',
+                    'form.department': 'Referring Department',
+                    'form.referralType': 'Referral Type',
+                    'form.clinicalReason': 'Clinical Reason',
+                    'form.attachments': 'Upload Attachments',
+                    'form.dragDrop': 'Drag & drop images here or click to upload',
+                    'form.multiple': 'Multiple files supported',
+                    'form.submit': 'Submit Request',
+                    'form.cancel': 'Cancel',
+                    'form.remove': 'Remove',
+                    'department.placeholder': 'Select department',
+                    'department.oncology': 'Oncology',
+                    'department.cardiology': 'Cardiology',
+                    'department.surgery': 'Surgery',
+                    'department.radiology': 'Radiology',
+                    'type.placeholder': 'Select type',
+                    'type.urgent': 'Urgent',
+                    'type.routine': 'Routine',
+                    'type.follow-up': 'Follow-up',
+                },
+                ar: {
+                    'page.title': 'إنشاء إحالة داخلية',
+                    'lang.label': 'اللغة',
+                    'nav.dashboard': 'لوحة التحكم',
+                    'nav.referrals': 'الإحالات',
+                    'nav.patients': 'المرضى',
+                    'nav.settings': 'الإعدادات',
+                    'form.patientName': 'اسم المريض',
+                    'form.patientId': 'رقم المريض',
+                    'form.department': 'القسم المحيل',
+                    'form.referralType': 'نوع الإحالة',
+                    'form.clinicalReason': 'السبب السريري',
+                    'form.attachments': 'رفع المرفقات',
+                    'form.dragDrop': 'اسحب الصور هنا أو انقر للرفع',
+                    'form.multiple': 'يدعم ملفات متعددة',
+                    'form.submit': 'إرسال الطلب',
+                    'form.cancel': 'إلغاء',
+                    'form.remove': 'إزالة',
+                    'department.placeholder': 'اختر القسم',
+                    'department.oncology': 'الأورام',
+                    'department.cardiology': 'القلب',
+                    'department.surgery': 'الجراحة',
+                    'department.radiology': 'الأشعة',
+                    'type.placeholder': 'اختر النوع',
+                    'type.urgent': 'عاجل',
+                    'type.routine': 'روتيني',
+                    'type.follow-up': 'متابعة',
+                }
+            };
+
+            function t(key) { return i18n[lang][key] != null ? i18n[lang][key] : key; }
+
+            function setLanguage(newLang) {
+                lang = newLang;
+                localStorage.setItem('referral-lang', lang);
+                document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+                document.documentElement.setAttribute('lang', lang === 'ar' ? 'ar' : 'en');
+                document.documentElement.classList.remove('lang-en', 'lang-ar');
+                document.documentElement.classList.add('lang-' + lang);
+
+                document.querySelectorAll('[data-i18n]').forEach(function(el) {
+                    var key = el.getAttribute('data-i18n');
+                    if (!key) return;
+                    var text = t(key);
+                    if (el.tagName === 'OPTION' && el.value) {
+                        var optKey = key.split('.')[0] + '.' + el.value;
+                        if (i18n[lang][optKey] != null) text = i18n[lang][optKey];
+                    }
+                    el.textContent = text;
+                });
+
+                document.querySelectorAll('.lang-btn').forEach(function(btn) {
+                    var isActive = btn.getAttribute('data-lang') === lang;
+                    btn.classList.toggle('bg-primary', isActive);
+                    btn.classList.toggle('text-white', isActive);
+                    btn.classList.toggle('text-slate-600', !isActive);
+                    btn.classList.toggle('hover:bg-slate-100', !isActive);
+                });
+
+            }
+
+            document.querySelectorAll('.lang-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() { setLanguage(btn.getAttribute('data-lang')); });
+            });
+
+            var sidebar = document.getElementById('sidebar');
+            var sidebarToggle = document.getElementById('sidebarToggle');
+            var sidebarChevron = document.getElementById('sidebarChevron');
+            if (sidebar && sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('collapsed');
+                    var isRtl = document.documentElement.getAttribute('dir') === 'rtl';
+                    sidebarChevron.style.transform = sidebar.classList.contains('collapsed') ? (isRtl ? 'rotate(180deg)' : 'rotate(180deg)') : 'rotate(0)';
+                });
+            }
+
+            var dropZone = document.getElementById('dropZone');
+            var fileInput = document.getElementById('fileInput');
+            var previewList = document.getElementById('previewList');
+
+            function addFiles(files) {
+                if (!files || !files.length) return;
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    if (!file.type.match(/^image\//)) continue;
+                    var id = 'preview-' + Date.now() + '-' + i;
+                    var url = URL.createObjectURL(file);
+                    uploadedFiles.push({ id: id, file: file, url: url });
+                    var li = document.createElement('li');
+                    li.className = 'relative rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm';
+                    li.dataset.previewId = id;
+                    li.innerHTML =
+                        '<img src="' + url + '" alt="" class="w-full h-28 object-cover">' +
+                        '<button type="button" class="remove-preview absolute top-1 end-1 w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 shadow text-sm" data-id="' + id + '" title="' + t('form.remove') + '">×</button>';
+                    previewList.appendChild(li);
+                    li.querySelector('.remove-preview').addEventListener('click', function() {
+                        var rid = this.getAttribute('data-id');
+                        var idx = uploadedFiles.findIndex(function(x) { return x.id === rid; });
+                        if (idx !== -1) {
+                            URL.revokeObjectURL(uploadedFiles[idx].url);
+                            uploadedFiles.splice(idx, 1);
+                        }
+                        var el = previewList.querySelector('[data-preview-id="' + rid + '"]');
+                        if (el) el.remove();
+                    });
+                }
+            }
+
+            if (dropZone && fileInput) {
+                dropZone.addEventListener('click', function(e) { if (e.target === dropZone || e.target.closest('#dropZone') && !e.target.closest('.remove-preview')) fileInput.click(); });
+                dropZone.addEventListener('dragover', function(e) { e.preventDefault(); dropZone.classList.add('dragover'); });
+                dropZone.addEventListener('dragleave', function() { dropZone.classList.remove('dragover'); });
+                dropZone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    dropZone.classList.remove('dragover');
+                    addFiles(e.dataTransfer.files);
+                });
+                fileInput.addEventListener('change', function() {
+                    addFiles(fileInput.files);
+                    fileInput.value = '';
+                });
+            }
+
+            document.getElementById('referralForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('Referral submit', { patientName: document.getElementById('patientName').value, attachments: uploadedFiles.length });
+                alert(lang === 'ar' ? 'تم إرسال الطلب (تجريبي)' : 'Request submitted (demo)');
+            });
+            document.getElementById('btnCancel').addEventListener('click', function() {
+                if (confirm(lang === 'ar' ? 'هل تريد الإلغاء؟' : 'Cancel?')) window.history.back();
+            });
+
+            setLanguage(lang);
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Data files (contains sensitive information)
+users.json
+content.json
+content.backup.*.json
+data/users.json
+data/content.json
+data/content.backup.*.json
+
+# Uploaded images (dashboard)
+uploads/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# PM2
+.pm2/
